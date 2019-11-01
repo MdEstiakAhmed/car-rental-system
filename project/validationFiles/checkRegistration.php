@@ -22,32 +22,43 @@
                                                 if($x >= 8){
                                                     if($_REQUEST["category"]!=""){
                                                         if($_REQUEST["pass"]==$_REQUEST["conpass"]){
-                                                            $c=$c+fwrite($file,"\r\n");
-                                                            $c=$c+fwrite($file,$_REQUEST["email"]);
-                                                            $c=$c+fwrite($file,"-");
-                                                            $c=$c+fwrite($file,$_REQUEST["uname"]);
-                                                            $c=$c+fwrite($file,"-");
-                                                            $c=$c+fwrite($file,$_REQUEST["day"]);
-                                                            $c=$c+fwrite($file,"/");
-                                                            $c=$c+fwrite($file,$_REQUEST["month"]);
-                                                            $c=$c+fwrite($file,"/");
-                                                            $c=$c+fwrite($file,$_REQUEST["year"]);
-                                                            $c=$c+fwrite($file,"-");
-                                                            $c=$c+fwrite($file,$_REQUEST["gender"]);
-                                                            $c=$c+fwrite($file,"-");
-                                                            $c=$c+fwrite($file,md5($_REQUEST["pass"]));
-                                                            $c=$c+fwrite($file,"-");
-                                                            $c=$c+fwrite($file,$_REQUEST["category"]);
-                                                            if($_REQUEST["category"]=="customer"){
-                                                                $_SESSION["loginStatus"]="yes";
-                                                                $_SESSION["name"]=$_REQUEST["uname"];
-                                                                header("Location: ..\..\project\HTMLFiles\landingPage.php");
+                                                            $source=$_FILES['fileToUpload']['tmp_name'];
+                                                            $imageLocation="uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                                                            $target="../uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                                                            if(move_uploaded_file($source,$target)){
+                                                                $c=$c+fwrite($file,"\r\n");
+                                                                $c=$c+fwrite($file,$_REQUEST["email"]);
+                                                                $c=$c+fwrite($file,"-");
+                                                                $c=$c+fwrite($file,$_REQUEST["uname"]);
+                                                                $c=$c+fwrite($file,"-");
+                                                                $c=$c+fwrite($file,$_REQUEST["day"]);
+                                                                $c=$c+fwrite($file,"/");
+                                                                $c=$c+fwrite($file,$_REQUEST["month"]);
+                                                                $c=$c+fwrite($file,"/");
+                                                                $c=$c+fwrite($file,$_REQUEST["year"]);
+                                                                $c=$c+fwrite($file,"-");
+                                                                $c=$c+fwrite($file,$_REQUEST["gender"]);
+                                                                $c=$c+fwrite($file,"-");
+                                                                $c=$c+fwrite($file,md5($_REQUEST["pass"]));
+                                                                $c=$c+fwrite($file,"-");
+                                                                $c=$c+fwrite($file,$_REQUEST["category"]);
+                                                                $c=$c+fwrite($file,"-");
+                                                                fwrite($file,$imageLocation);
+                                                                if($_REQUEST["category"]=="customer"){
+                                                                    $_SESSION["loginStatus"]="yes";
+                                                                    $_SESSION["name"]=$_REQUEST["uname"];
+                                                                    header("Location: ..\..\project\HTMLFiles\landingPage.php");
+                                                                }
+                                                                elseif($_REQUEST["category"]=="client"){
+                                                                    header("Location: ..\..\project\HTMLFiles\clientPanel.php");
+                                                                }
+                                                                elseif($_REQUEST["category"]=="admin"){
+                                                                    header("Location: ..\..\project\HTMLFiles\adminPanel.php");
+                                                                }
                                                             }
-                                                            elseif($_REQUEST["category"]=="client"){
-                                                                header("Location: ..\..\project\HTMLFiles\clientPanel.php");
-                                                            }
-                                                            elseif($_REQUEST["category"]=="admin"){
-                                                                header("Location: ..\..\project\HTMLFiles\adminPanel.php");
+                                                            else{
+                                                                $msg="file not uploaded";
+                                                                $_SESSION["vehicleRegistrationError"]=$msg;
                                                             }
                                                         }
                                                         else{
