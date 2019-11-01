@@ -14,7 +14,7 @@
 				<a href="addVehicle.php">Add Vehicle</a><br/>
 				<a href="registrationPage.php">Add User</a><br/>
 				<a href="logoutAction.php">Add vehicle Category</a><br/>
-				<a href="logoutAction.php">Manege Vehicle</a><br/>
+				<a href="vehicleDisplay.php">show Vehicle</a><br/>
 				<a href="logoutAction.php">Manege User</a><br/>
 				<a href="logoutAction.php">Manege Vehicle Category</a><br/>
 				<a href="logoutAction.php">Vehicle Borrow Request</a><br/>

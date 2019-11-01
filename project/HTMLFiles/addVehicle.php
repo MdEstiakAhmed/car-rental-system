@@ -8,7 +8,7 @@
 		session_start();
 	?>
 	<h1>Enter Your Vehicle Information</h1>
-	<form action="..\..\project\validationFiles\checkVehicleRegistration.php" method="post">
+	<form action="..\..\project\validationFiles\checkVehicleRegistration.php" method="post" enctype="multipart/form-data">
 		<strong>Vehicle Category:</strong>
 		<select name="categorytype">
 			<option value="" name="">---Category---</option>
@@ -92,6 +92,9 @@
 			<option value="1501 to 2000" name="range2">1501 to 2000</option>
 			<option value="2001 to 2500" name="range3">2001 to 2500</option>
 		</select>
+		<br/><br/>
+		<strong>Select file to upload :</strong> 
+		<input type="file" name="fileToUpload">
 		<br/><br/>
 		<?php
 			if(isset($_SESSION["adminlogin"])){?>

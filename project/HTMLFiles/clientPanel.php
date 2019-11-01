@@ -12,6 +12,7 @@
 					echo "<h1>"."welcome ".$_SESSION["name"]." to client panel"."</h1>"."<br>";
 				?>
 				<a href="addVehicle.php">Add Vehicle</a><br/>
+				<a href="vehicleDisplay.php">Show My Vehicle</a><br/>
 				<a href="logoutAction.php">Manege Vehicle</a><br/>
 				<a href="logoutAction.php">Log Out</a>
 			<?php
