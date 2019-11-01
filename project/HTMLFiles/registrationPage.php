@@ -8,7 +8,7 @@
 		session_start();
 	?>
 		<h1>Enter Your Information</h1>
-		<form action="..\..\project\validationFiles\checkRegistration.php" method="post">
+		<form action="..\..\project\validationFiles\checkRegistration.php" method="post" enctype="multipart/form-data">
 			<strong>User-name:</strong>
 			<input type="text" name="uname" placeholder="Enter username"/>
 			<br/><br/>
@@ -63,6 +63,9 @@
 			<strong>Female</strong>
 			<input type="radio" name="gender" value="Other"> 
 			<strong>Other</strong>
+			<br/><br/>
+			<strong>Select phpto to upload :</strong> 
+			<input type="file" name="fileToUpload">
 			<br/><br/>
 			<strong>Password:</strong>
 			<input type="password" name="pass" placeholder="Enter password" />

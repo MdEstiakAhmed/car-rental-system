@@ -18,6 +18,13 @@
         unset($_SESSION["adminlogin"]);
         $_SESSION["clientlogin"]="";
         unset($_SESSION["clientlogin"]);
+        $_SESSION["vehicleID"]="";
+        unset($_SESSION["vehicleID"]);
+        $_SESSION["vehicleCategory"]="";
+        unset($_SESSION["vehicleCategory"]);
+        $_SESSION["borrowID"]="";
+        unset($_SESSION["borrowID"]);
+        unset($_SESSION["userUpdateError"]);
         header("Location: ..\..\project\HTMLFiles\landingPage.php");
     ?>
 </body>
