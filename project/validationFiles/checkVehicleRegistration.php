@@ -5,6 +5,29 @@
     </head>
     <body>
         <?php
+            function idGenerator(){
+                $file=fopen("../dataSet/vehicleRegistrationData.txt","r") or die("file error");
+                $data=array();
+                while($c=fgets($file)){
+                    $ar=explode("-",$c);
+                    $dar[]=$ar[0];
+                }
+                $flag=0;
+                $id=uniqid();
+                foreach ($dar as $key) {
+                    if($key==$id){
+                        $flag=1;
+                    }
+                }
+                if($flag==0){
+                    return $id;
+                }
+                else{
+                    idGenerator();
+                }
+            }
+        ?>
+        <?php
             session_start();
             echo $_SESSION["useremail"];
             $file=fopen('..\..\project\dataSet\vehicleRegistrationData.txt','a') or die("fle open error");
@@ -23,37 +46,53 @@
                                                             if($_REQUEST["seatnumber"]<12){
                                                                 if($_REQUEST["color"]!=""){
                                                                     if($_REQUEST["power"]!=""){
-                                                                        fwrite($file,"\r\n");
-                                                                        fwrite($file,$_SESSION["useremail"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["categorytype"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["company"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["city"]);
-                                                                        fwrite($file," metro ");
-                                                                        fwrite($file,$_REQUEST["category"]);
-                                                                        fwrite($file," ");
-                                                                        fwrite($file,$_REQUEST["first2number"]);
-                                                                        fwrite($file,"/");
-                                                                        fwrite($file,$_REQUEST["last4number"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["licenseday"]);
-                                                                        fwrite($file,"/");
-                                                                        fwrite($file,$_REQUEST["licensemonth"]);
-                                                                        fwrite($file,"/");
-                                                                        fwrite($file,$_REQUEST["licenseyear"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["seatnumber"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["color"]);
-                                                                        fwrite($file,"-");
-                                                                        fwrite($file,$_REQUEST["power"]);
-                                                                        if(isset($_SESSION["adminlogin"])){
-                                                                            header("Location: ..\..\project\HTMLFiles\adminPanel.php");
+                                                                        $source=$_FILES['fileToUpload']['tmp_name'];
+                                                                        $imageLocation="uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                                                                        $target="../uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                                                                        if(move_uploaded_file($source,$target)){
+                                                                            fwrite($file,"\r\n");
+                                                                            $x=idGenerator();
+                                                                            fwrite($file,$x);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_SESSION["useremail"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["categorytype"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["company"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["city"]);
+                                                                            fwrite($file," metro ");
+                                                                            fwrite($file,$_REQUEST["category"]);
+                                                                            fwrite($file," ");
+                                                                            fwrite($file,$_REQUEST["first2number"]);
+                                                                            fwrite($file,"/");
+                                                                            fwrite($file,$_REQUEST["last4number"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["licenseday"]);
+                                                                            fwrite($file,"/");
+                                                                            fwrite($file,$_REQUEST["licensemonth"]);
+                                                                            fwrite($file,"/");
+                                                                            fwrite($file,$_REQUEST["licenseyear"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["seatnumber"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["color"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$_REQUEST["power"]);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,$imageLocation);
+                                                                            fwrite($file,"-");
+                                                                            fwrite($file,"available");
+                                                                            if(isset($_SESSION["adminlogin"])){
+                                                                                header("Location: ..\..\project\HTMLFiles\adminPanel.php");
+                                                                            }
+                                                                            elseif(isset($_SESSION["clientlogin"])){
+                                                                                header("Location: ..\..\project\HTMLFiles\clientPanel.php");
+                                                                            }
                                                                         }
-                                                                        elseif(isset($_SESSION["clientlogin"])){
-                                                                            header("Location: ..\..\project\HTMLFiles\clientPanel.php");
+                                                                        else{
+                                                                            $msg="file not uploaded";
+                                                                            $_SESSION["vehicleRegistrationError"]=$msg;
                                                                         }
                                                                     }
                                                                     else{
