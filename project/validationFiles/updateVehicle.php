@@ -55,6 +55,6 @@
         fwrite($file,trim($k["status"]));
         $msg="successfully updated";
         $_SESSION["vehicleupdate"]=$msg;
-        header("Location: ..\..\project\HTMLFiles\manegeVehicle.php");
+        header("Location: ..\..\project\displayFiles\manegeVehicle.php");
     }   
 ?>

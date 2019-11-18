@@ -27,9 +27,10 @@
                             if($v["usermail"]==$_SESSION["useremail"]){
                                 $data[$v["usermail"]]["username"]=$_REQUEST["uname"];
                                 $data[$v["usermail"]]["password"]=md5($_REQUEST["pass"]);
+                                $_SESSION["name"]=$_REQUEST["uname"];
                             }
                         }
-                        $file=fopen('..\..\project\dataSet\userRegistrationData.txt','w') or die("fle open error");
+                        $file=fopen('..\..\project\dataSet\userRegistrationData.txt','w') or die("file open error");
                         foreach ($data as $k) {
                             fwrite($file,"\r\n");
                             fwrite($file,$k["usermail"]);
@@ -48,7 +49,8 @@
                         } 
                         $msg="successfully updated";
                         $_SESSION["userupdate"]=$msg;
-                        header("Location: ..\..\project\HTMLFiles\userAccount.php");
+
+                        header("Location: ..\..\project\displayFiles\userAccount.php");
                     }
                     else{
                         $msg="password doesn't match";
@@ -75,6 +77,6 @@
         $_SESSION["userUpdateError"]=$msg;
     }
     if(isset($_SESSION["userUpdateError"])){
-        header("Location: ../../project/HTMLFiles/manegeUser.php");
+        header("Location: ../../project/displayFiles/manegeUser.php");
     }
 ?>

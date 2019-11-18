@@ -69,109 +69,78 @@
                 $durationCost=$duration*1500;
 
                 $totalcost = $categoryCost + $destinationCost + $drivingCost + $durationCost;
-                //$costArray = array($categoryCost,$destinationCost,$drivingCost,$durationCost);
-                return $totalcost;
+                $costArray = array($categoryCost, $destinationCost, $drivingCost, $duration, $durationCost, $totalcost);
+                return $costArray;
+            }
+            function insertRequest(){
+                $sqlQuery_getId="SELECT auto_increment AS id FROM `information_schema`.`tables` WHERE table_name = 'borrow_information' AND table_schema = 'vehicle_rental_system'";
+                include("../databaseConnection/getData/getNextId.php");
+                $id=getData($sqlQuery_getId);
+                if($id!=null){
+                    $cost=costAnalysis();
+                    $sqlQuery_cost="INSERT INTO `borrow_cost_details` (`borrow_id`, `category_cost`, `destination_cost`, `driving_cost`,`total_day`, `duration_cost`, `total_cost`) VALUES ('".$id."', '".$cost[0]."', '".$cost[1]."', '".$cost[2]."', '".$cost[3]."', '".$cost[4]."', '".$cost[5]."')";
+                    include("../databaseConnection/setData/setData.php");
+                    setData($sqlQuery_cost);
+
+                    $startDate=date_create($_REQUEST["staringDate"]);
+                    $startDate=date_format($startDate,"d/M/Y");
+                    $endDate=date_create($_REQUEST["endingDate"]);
+                    $endDate=date_format($endDate,"d/M/Y");
+                    $sqlQuery_borrow = "INSERT INTO `borrow_information` (`vehicle_id`, `user_id`, `vehicle_category`, `destination`, `driving_option`, `user_license_number`, `travel_start_date`, `travel_end_date`, `total_cost`, `borrow_status`) VALUES ('".$_SESSION["vehicleID"]."', '".$_SESSION["userId"]."', '".$_SESSION["vehicleCategory"]."', '".$_REQUEST["destination"]."', '".$_REQUEST["destination"]."', '".$_REQUEST["destination"]."', '".$startDate."', '".$endDate."', '".$cost[5]."', 'pending')";
+                    setData($sqlQuery_borrow);
+
+                    $sqlQuery_car_status="UPDATE `vehicle_information` SET `status` = 'unavailable' WHERE `vehicle_information`.`id` = '".$_SESSION["vehicleID"]."';";
+                    setData($sqlQuery_car_status);
+                }
+                else {
+                    $_SESSION["sqlError"]="error in database";
+                }
 
                 
             }
-            function idGenerator(){
-                $file=fopen("../dataSet/borrowRequestData.txt","r") or die("file error");
-                $dar=array();
-                while($c=fgets($file)){
-                    $ar=explode("-",$c);
-                    $dar[]=$ar[0];
-                }
-                $flag=0;
-                $id=uniqid();
-                foreach ($dar as $key){
-                    if($key==$id){
-                        $flag=1;
-                    }
-                }
-                if($flag==0){
-                    return $id;
-                }
-                else{
-                    idGenerator();
-                }
-            }
         ?>
         <?php
-            $file1=fopen("../dataSet/vehicleRegistrationData.txt","r") or die("file error");
-            $data1=array();
-            $status="";
-			while($c1=fgets($file1)){
-                if($c!="\r\n"){
-                    $ar1=explode("-",$c1);
-                    $dar1["vehicleID"]=$ar1[0];
-                    $dar1["status"]=$ar1[10];
-                    if($_SESSION["vehicleID"]==$ar1[0]){
-                        $status=$ar1[10];
-                    }
-                    $data1[]=$dar1;
-                }
-			}
-            $file=fopen('..\..\project\dataSet\borrowRequestData.txt','a') or die("fle open error");
-            if($status=="available"){
-                if($_REQUEST["destination"]!=""){
-                    if($_REQUEST["drivingOption"]!=""){
-                        if($_REQUEST["drivingLicense"]!=""){
-                            if($_REQUEST["staringDate"]!=""){
-                                if($_REQUEST["endingDate"]!=""){
-                                    fwrite($file,"\r\n");
-                                    $borrowID=idGenerator();
-                                    fwrite($file,$borrowID);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_SESSION["useremail"]);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_SESSION["vehicleID"]);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_REQUEST["staringDate"]);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_REQUEST["endingDate"]);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_REQUEST["destination"]);
-                                    fwrite($file,"_");
-                                    fwrite($file,$_REQUEST["drivingOption"]);
-                                    fwrite($file,"_");
-                                    $cost=costAnalysis();
-                                    fwrite($file,$cost);
-                                    fwrite($file,"_");
-                                    fwrite($file,"Pending");
-                                    $_SESSION["borrowID"]=$borrowID;
-                                    header("Location: ..\..\project\HTMLFiles\borrowDetails.php");
-                                }
-                                else{
-                                    $msg="select ending date";
-                                    $_SESSION["vehicleRegistrationError"]=$msg;
-                                }
-                            }
-                            else{
-                                $msg="select starting date";
-                                $_SESSION["vehicleRegistrationError"]=$msg;
-                            }
+            date_default_timezone_set("Asia/dhaka");
+            $todayTime=date("d-M-y");
+            $startTime=$_REQUEST["staringDate"];
+            $endTime=$_REQUEST["endingDate"];
+            if(date_create($startTime)>date_create($todayTime) && date_create($endTime)>date_create($todayTime) && date_create($endTime)>=date_create($startTime)){
+                if($_REQUEST["drivingOption"]=="selfDriving"){
+                    if($_REQUEST["drivingLicense"]!=""){
+                        if(preg_match('/([a-zA-Z]{2}[0-9]{7}[a-zA-Z]{1}[0-9]{5})/', $_REQUEST["drivingLicense"])){
+                            echo "all ok. have a safe journey";
+                            insertRequest();
                         }
                         else{
-                            $msg="select driving license";
+                            $msg="license error";
+                            echo $msg;
                             $_SESSION["vehicleRegistrationError"]=$msg;
                         }
                     }
                     else{
-                        $msg="select driving option";
+                        $msg="driving license must needed.";
+                        echo $msg;
                         $_SESSION["vehicleRegistrationError"]=$msg;
                     }
                 }
-                else{
-                    $msg="select destination";
-                    $_SESSION["vehicleRegistrationError"]=$msg;
+                elseif($_REQUEST["drivingOption"]=="withDriver"){
+                    echo "all ok with driver";
+                    insertRequest();
                 }
             }
-            else{
-                $msg="vehicle is not available";
+            else {
+                $msg="start or ending date error";
+                echo $msg;
                 $_SESSION["vehicleRegistrationError"]=$msg;
             }
             if(isset($_SESSION["vehicleRegistrationError"])){
-                header("Location: ../../project/HTMLFiles/borrowRequest.php");
+                header("Location: ../displayFiles/borrowRequest.php");
+            }
+            if(isset($_SESSION["sqlError"])){
+                header("Location: ../displayFiles/borrowRequest.php");
+            }
+            if(isset($_SESSION["sqlInsert"])){
+                header("Location: ..\displayFiles\borrowDetails.php");
             }
         ?>
     </body>

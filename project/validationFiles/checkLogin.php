@@ -1,58 +1,40 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>check login</title>
-    </head>
-    <body>
-        <?php
-            session_start();
-            $cred=array();
-            $username="";
-            $useremail="";
-            $userType="";
-            $file=fopen("..\..\project\dataSet\userRegistrationData.txt","r") or die("file error");
-            while($c=fgets($file)){
-                $ar=explode("-",$c);
-                if($ar[0]==$_REQUEST["email"]){
-                    $username = $ar[1];
-                    $userType = trim($ar[5]);
-                    $useremail = $ar[0];
-                }
-                $cred[$ar[0]]=$ar[4];
-            }
-            
-            foreach($cred as $k=>$v){
-                if($_REQUEST["email"]==$k && md5($_REQUEST["pass"])==$v){
-                    //echo "Login success";
-                    $_SESSION["valid"]="yes";
-                    $_SESSION["name"]=$username;
-                    $_SESSION["useremail"]=$useremail;
-                    $flag = 1;
-                    break;
-                }
-            }
-            echo $useremail;
-            if($flag==0){
-                echo "<p style='color:red'>Wrong credentials</p>";
-                $_SESSION["worng"]="worng password or username";
-                header("Location: ..\..\project\HTMLFiles\loginPage.php");
-            }
-            elseif($flag==1){
-                //echo $userType;
-                //echo strlen($userType);
-                if(strcmp($userType, "admin")==0){
-                    $_SESSION["loginStatus"]="yes";
-                    header("Location: ..\..\project\HTMLFiles\adminPanel.php");
-                }
-                elseif(strcmp($userType, "customer")==0){
-                    $_SESSION["loginStatus"]="yes";
-                    header("Location: ..\..\project\HTMLFiles\landingPage.php");
-                }
-                elseif(strcmp($userType, "client")==0){
-                    $_SESSION["loginStatus"]="yes";
-                    header("Location: ..\..\project\HTMLFiles\clientPanel.php");
-                }
-            }    
-        ?>
-    </body>
-</html>
+<?php
+    session_start();
+    $outerArray=array();
+    $checkLoginStatus=0;
+    include("../databaseConnection/getData/getUserData.php");
+    $sqlQuery="select * from user_information where email='".$_REQUEST["userEmail"]."'";
+    getData($sqlQuery);
+    foreach($outerArray as $key){
+        if($_REQUEST["userEmail"]==$key["email"] && md5($_REQUEST["userPassword"])==$key["password"]){
+            $_SESSION["valid"]="yes";
+            $_SESSION["userName"]=$key["name"];
+            $_SESSION["userEmail"]=$key["email"];
+            $_SESSION["userId"]=$key["id"];
+            $_SESSION["userType"]=$key["type"];
+            $checkLoginStatus = 1;
+            break;
+        }
+    }
+
+    if($checkLoginStatus==0){
+        $_SESSION["loginError"]="worng password or username";
+        header("Location: ..\displayFiles\loginPage.php");
+    }
+    elseif($checkLoginStatus==1){
+        if(strcmp($_SESSION["userType"], "admin")==0){
+            $_SESSION["loginStatus"]="admin";
+            $_SESSION["adminlogin"]="yes";
+            header("Location: ..\displayFiles\adminPanel.php");
+        }
+        elseif(strcmp($_SESSION["userType"], "customer")==0){
+            $_SESSION["loginStatus"]="customer";
+            header("Location: ..\displayFiles\landingPage.php");
+        }
+        elseif(strcmp($_SESSION["userType"], "client")==0){
+            $_SESSION["loginStatus"]="client";
+                $_SESSION["clientlogin"]="yes";
+            header("Location: ..\displayFiles\clientPanel.php");
+        }
+    }    
+?>

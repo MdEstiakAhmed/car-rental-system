@@ -1,177 +1,49 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>check vehicle registration</title>
-    </head>
-    <body>
-        <?php
-            function idGenerator(){
-                $file=fopen("../dataSet/vehicleRegistrationData.txt","r") or die("file error");
-                $data=array();
-                while($c=fgets($file)){
-                    $ar=explode("-",$c);
-                    $dar[]=$ar[0];
+<?php
+    session_start();
+
+    if(strlen($_REQUEST["first2number"])==2){
+        if(strlen($_REQUEST["last4number"])==4){
+            if($_REQUEST["seatnumber"]<12){
+                echo "varification done";
+
+                $source=$_FILES['fileToUpload']['tmp_name'];
+                $imageLocation="uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                $target="../uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
+                move_uploaded_file($source,$target);
+                echo "photo upload done";
+                
+                include("../databaseConnection/setData/setData.php");
+                $licenseNumber = $_REQUEST["city"]." metro ".$_REQUEST["category"]." ".$_REQUEST["first2number"]."-".$_REQUEST["last4number"];
+                $formatedDate=date_create($_REQUEST["licensedate"]);
+                $formatedDate= date_format($formatedDate,"d-M-Y");
+
+                $sqlQuery = "INSERT INTO `vehicle_information` (`owner_email`, `vehicle_type`, `company`, `license_number`, `license_expiry_date`, `seat_number`, `color`, `hoursepower`, `image_URL`, `status`, `borrow_count`) VALUES ('".$_SESSION["userEmail"]."', '".$_REQUEST["categorytype"]."', '".$_REQUEST["company"]."', '".$licenseNumber."', '".$formatedDate."', '".$_REQUEST["seatnumber"]."', '".$_REQUEST["color"]."', '".$_REQUEST["power"]."', '".$imageLocation."', 'available', '0')";
+                
+                setData($sqlQuery);
+                echo "database done";
+
+                if(isset($_SESSION["userType"]) && $_SESSION["userType"]=="admin"){
+                    header("Location: ..\..\project\displayFiles\adminPanel.php");
                 }
-                $flag=0;
-                $id=uniqid();
-                foreach ($dar as $key) {
-                    if($key==$id){
-                        $flag=1;
-                    }
-                }
-                if($flag==0){
-                    return $id;
-                }
-                else{
-                    idGenerator();
-                }
-            }
-        ?>
-        <?php
-            session_start();
-            echo $_SESSION["useremail"];
-            $file=fopen('..\..\project\dataSet\vehicleRegistrationData.txt','a') or die("fle open error");
-            if($_REQUEST["categorytype"]!=""){
-                if($_REQUEST["company"]!=""){
-                    if($_REQUEST["city"]!=""){
-                        if($_REQUEST["category"]!=""){
-                            if($_REQUEST["first2number"]!=""){
-                                if(strlen($_REQUEST["first2number"])==2){
-                                    if($_REQUEST["last4number"]!=""){
-                                        if(strlen($_REQUEST["last4number"])==4){
-                                            if($_REQUEST["licenseday"]!=""){
-                                                if($_REQUEST["licensemonth"]!=""){
-                                                    if($_REQUEST["licenseyear"]!=""){
-                                                        if($_REQUEST["seatnumber"]!=""){
-                                                            if($_REQUEST["seatnumber"]<12){
-                                                                if($_REQUEST["color"]!=""){
-                                                                    if($_REQUEST["power"]!=""){
-                                                                        $source=$_FILES['fileToUpload']['tmp_name'];
-                                                                        $imageLocation="uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
-                                                                        $target="../uploadImage/uploadImageOfVehicle/".$_FILES['fileToUpload']['name'];
-                                                                        if(move_uploaded_file($source,$target)){
-                                                                            fwrite($file,"\r\n");
-                                                                            $x=idGenerator();
-                                                                            fwrite($file,$x);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_SESSION["useremail"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["categorytype"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["company"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["city"]);
-                                                                            fwrite($file," metro ");
-                                                                            fwrite($file,$_REQUEST["category"]);
-                                                                            fwrite($file," ");
-                                                                            fwrite($file,$_REQUEST["first2number"]);
-                                                                            fwrite($file,"/");
-                                                                            fwrite($file,$_REQUEST["last4number"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["licenseday"]);
-                                                                            fwrite($file,"/");
-                                                                            fwrite($file,$_REQUEST["licensemonth"]);
-                                                                            fwrite($file,"/");
-                                                                            fwrite($file,$_REQUEST["licenseyear"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["seatnumber"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["color"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$_REQUEST["power"]);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,$imageLocation);
-                                                                            fwrite($file,"-");
-                                                                            fwrite($file,"available");
-                                                                            if(isset($_SESSION["adminlogin"])){
-                                                                                header("Location: ..\..\project\HTMLFiles\adminPanel.php");
-                                                                            }
-                                                                            elseif(isset($_SESSION["clientlogin"])){
-                                                                                header("Location: ..\..\project\HTMLFiles\clientPanel.php");
-                                                                            }
-                                                                        }
-                                                                        else{
-                                                                            $msg="file not uploaded";
-                                                                            $_SESSION["vehicleRegistrationError"]=$msg;
-                                                                        }
-                                                                    }
-                                                                    else{
-                                                                        $msg="select hourse power";
-                                                                        $_SESSION["vehicleRegistrationError"]=$msg;
-                                                                    }
-                                                                }
-                                                                else{
-                                                                    $msg="select vehicle color";
-                                                                    $_SESSION["vehicleRegistrationError"]=$msg;
-                                                                }
-                                                            }
-                                                            else{
-                                                                $msg="vehile seat limit over";
-                                                                $_SESSION["vehicleRegistrationError"]=$msg;
-                                                            }
-                                                        }
-                                                        else{
-                                                            $msg="seelct vehicle seat number";
-                                                            $_SESSION["vehicleRegistrationError"]=$msg;
-                                                        }
-                                                    }
-                                                    else{
-                                                        $msg="select license year";
-                                                        $_SESSION["vehicleRegistrationError"]=$msg;
-                                                    }
-                                                }
-                                                else{
-                                                    $msg="select license month";
-                                                    $_SESSION["vehicleRegistrationError"]=$msg;
-                                                }
-                                            }
-                                            else{
-                                                $msg="select license day";
-                                                $_SESSION["vehicleRegistrationError"]=$msg;
-                                            }
-                                        }
-                                        else{
-                                            $msg="vehicle last four digit error";
-                                            $_SESSION["vehicleRegistrationError"]=$msg;
-                                        }
-                                    }
-                                    else{
-                                        $msg="enter last four digit of vehicle number";
-                                        $_SESSION["vehicleRegistrationError"]=$msg;
-                                    }
-                                }
-                                else{
-                                    $msg="vehicle last two digit error";
-                                    $_SESSION["vehicleRegistrationError"]=$msg;
-                                }
-                            }
-                            else{
-                                $msg="enter last two digit of vehicle number";
-                                $_SESSION["vehicleRegistrationError"]=$msg;
-                            }
-                        }
-                        else{
-                            $msg="select category of vehilce number";
-                            $_SESSION["vehicleRegistrationError"]=$msg;
-                        }
-                    }
-                    else{
-                        $msg="select city of vehicle number";
-                        $_SESSION["vehicleRegistrationError"]=$msg;
-                    }
-                }
-                else{
-                    $msg="select vehile company";
-                    $_SESSION["vehicleRegistrationError"]=$msg;
+                elseif(isset($_SESSION["userType"]) && $_SESSION["userType"]=="client"){
+                    header("Location: ..\..\project\displayFiles\clientPanel.php");
                 }
             }
             else{
-                $msg="select vehile category";
+                $msg="vehile seat limit over";
                 $_SESSION["vehicleRegistrationError"]=$msg;
             }
-            if(isset($_SESSION["vehicleRegistrationError"])){
-                header("Location: ../../project/HTMLFiles/addVehicle.php");
-            }
-        ?>
-    </body>
-</html>
+        }
+        else{
+            $msg="vehicle last four digit error";
+            $_SESSION["vehicleRegistrationError"]=$msg;
+        }
+    }
+    else{
+        $msg="vehicle last two digit error";
+        $_SESSION["vehicleRegistrationError"]=$msg;
+    }
+    if(isset($_SESSION["vehicleRegistrationError"]) || isset($_SESSION["sqlError"])){
+        header("Location: ../displayFiles/addVehicle.php");
+    }
+?>
