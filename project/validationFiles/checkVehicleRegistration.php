@@ -22,11 +22,13 @@
                 setData($sqlQuery);
                 echo "database done";
 
+                setcookie("insertCar","successfully Added to showcase",time()+50000, "/");
+
                 if(isset($_SESSION["userType"]) && $_SESSION["userType"]=="admin"){
-                    header("Location: ..\..\project\displayFiles\adminPanel.php");
+                    header("Location: ../../project/displayFiles/vehicleDisplay.php");
                 }
                 elseif(isset($_SESSION["userType"]) && $_SESSION["userType"]=="client"){
-                    header("Location: ..\..\project\displayFiles\clientPanel.php");
+                    header("Location: ../../project/displayFiles/vehicleDisplay.php");
                 }
             }
             else{

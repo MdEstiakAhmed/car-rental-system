@@ -20,6 +20,10 @@
                         move_uploaded_file($source,$target);
                         echo "photo upload done";
 
+                        $sqlQuery_getId="SELECT auto_increment AS id FROM `information_schema`.`tables` WHERE table_name = 'user_information' AND table_schema = 'vehicle_rental_system'";
+                        include("../databaseConnection/getData/getNextId.php");
+                        $id=getData($sqlQuery_getId);
+
                         include("../databaseConnection/setData/setData.php");
                         $encriptedPassword = md5($_REQUEST["userPassword"]);
                         $formatedDate=date_create($_REQUEST["birthdate"]);
@@ -37,6 +41,7 @@
                                 $_SESSION["loginStatus"]="client";
                                 header("Location: ..\displayFiles\clientPanel.php");
                             }
+                            $_SESSION["userId"]=$id;
                             $_SESSION["userName"]=$_REQUEST["userName"];
                             $_SESSION["userEmail"]=$_REQUEST["userEmail"];
                         }

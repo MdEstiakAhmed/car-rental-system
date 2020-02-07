@@ -3,67 +3,43 @@
     if($_REQUEST["uname"]!=""){
         $name = $_REQUEST["uname"];
         if (preg_match("/^[a-zA-Z ]*$/",$name)){
-            if($_REQUEST["pass"]!=""){
-                $x = strlen($_REQUEST["pass"]);
-                if($x >= 8){
-                    if($_REQUEST["pass"]==$_REQUEST["conpass"]){
-                        $file=fopen("../dataSet/userRegistrationData.txt","r") or die("file error");
-                        $data=array();
-                        $status="";
-                        while($c=fgets($file)){
-                            if($c!="\r\n"){
-                                $ar=explode("-",$c);
-                                $dar["usermail"]=$ar[0];
-                                $dar["username"]=$ar[1];
-                                $dar["birthdate"]=$ar[2];
-                                $dar["gender"]=$ar[3];
-                                $dar["password"]=$ar[4];
-                                $dar["usertype"]=$ar[5];
-                                $dar["userimagelink"]=$ar[6];
-                                $data[$dar["usermail"]]=$dar;
+            $phone =$_REQUEST["userPhoneNumber"];
+            $first3Digit = substr($phone,0,3);
+            $length = strlen($phone);
+            if ($length == 11 && ($first3Digit =="017" || $first3Digit =="019" || $first3Digit =="015" || $first3Digit =="016")){
+                if($_REQUEST["pass"]!=""){
+                    $x = strlen($_REQUEST["pass"]);
+                    if($x >= 5){
+                        if($_REQUEST["pass"]==$_REQUEST["conpass"]){
+                            $encriptedPassword = md5($_REQUEST["pass"]);
+                            include("../databaseConnection/setData/setData.php");
+                            $sqlQuery="UPDATE `user_information` SET `name` = '".$_REQUEST["uname"]."', `phone_number` = '".$_REQUEST["userPhoneNumber"]."', `password` = '".$encriptedPassword."' WHERE `user_information`.`id` = '".$_SESSION["updateId"]."';";
+                            setData($sqlQuery);
+                            $msg="successfully updated";
+                            $_SESSION["userupdate"]=$msg;
+                            if($_SESSION["loginStatus"]=="customer"){
+                                $_SESSION["userName"]=$_REQUEST["uname"];
                             }
+                            
+                            header("Location: ..\..\project\displayFiles\userAccount.php");
                         }
-                        foreach($data as $v){ 
-                            if($v["usermail"]==$_SESSION["useremail"]){
-                                $data[$v["usermail"]]["username"]=$_REQUEST["uname"];
-                                $data[$v["usermail"]]["password"]=md5($_REQUEST["pass"]);
-                                $_SESSION["name"]=$_REQUEST["uname"];
-                            }
+                        else{
+                            $msg="password doesn't match";
+                            $_SESSION["userUpdateError"]=$msg;
                         }
-                        $file=fopen('..\..\project\dataSet\userRegistrationData.txt','w') or die("file open error");
-                        foreach ($data as $k) {
-                            fwrite($file,"\r\n");
-                            fwrite($file,$k["usermail"]);
-                            fwrite($file,"-");
-                            fwrite($file,$k["username"]);
-                            fwrite($file,"-");
-                            fwrite($file,$k["birthdate"]);
-                            fwrite($file,"-");
-                            fwrite($file,$k["gender"]);
-                            fwrite($file,"-");
-                            fwrite($file,$k["password"]);
-                            fwrite($file,"-");
-                            fwrite($file,$k["usertype"]);
-                            fwrite($file,"-");
-                            fwrite($file,trim($k["userimagelink"]));
-                        } 
-                        $msg="successfully updated";
-                        $_SESSION["userupdate"]=$msg;
-
-                        header("Location: ..\..\project\displayFiles\userAccount.php");
                     }
                     else{
-                        $msg="password doesn't match";
+                        $msg="password is too small";
                         $_SESSION["userUpdateError"]=$msg;
                     }
                 }
                 else{
-                    $msg="password is too small";
+                    $msg="password field empty";
                     $_SESSION["userUpdateError"]=$msg;
                 }
             }
-            else{
-                $msg="password field empty";
+            else {
+                $msg="phone number error";
                 $_SESSION["userUpdateError"]=$msg;
             }
         }

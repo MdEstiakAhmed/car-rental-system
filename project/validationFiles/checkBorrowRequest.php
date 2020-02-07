@@ -86,7 +86,7 @@
                     $startDate=date_format($startDate,"d/M/Y");
                     $endDate=date_create($_REQUEST["endingDate"]);
                     $endDate=date_format($endDate,"d/M/Y");
-                    $sqlQuery_borrow = "INSERT INTO `borrow_information` (`vehicle_id`, `user_id`, `vehicle_category`, `destination`, `driving_option`, `user_license_number`, `travel_start_date`, `travel_end_date`, `total_cost`, `borrow_status`) VALUES ('".$_SESSION["vehicleID"]."', '".$_SESSION["userId"]."', '".$_SESSION["vehicleCategory"]."', '".$_REQUEST["destination"]."', '".$_REQUEST["destination"]."', '".$_REQUEST["destination"]."', '".$startDate."', '".$endDate."', '".$cost[5]."', 'pending')";
+                    $sqlQuery_borrow = "INSERT INTO `borrow_information` (`vehicle_id`, `user_id`, `vehicle_category`, `destination`, `driving_option`, `user_license_number`, `travel_start_date`, `travel_end_date`, `total_cost`, `borrow_status`) VALUES ('".$_SESSION["vehicleID"]."', '".$_SESSION["userId"]."', '".$_SESSION["vehicleCategory"]."', '".$_REQUEST["destination"]."', '".$_REQUEST["drivingOption"]."', '".$_REQUEST["drivingLicense"]."', '".$startDate."', '".$endDate."', '".$cost[5]."', 'pending')";
                     setData($sqlQuery_borrow);
 
                     $sqlQuery_car_status="UPDATE `vehicle_information` SET `status` = 'unavailable' WHERE `vehicle_information`.`id` = '".$_SESSION["vehicleID"]."';";
@@ -104,35 +104,66 @@
             $todayTime=date("d-M-y");
             $startTime=$_REQUEST["staringDate"];
             $endTime=$_REQUEST["endingDate"];
-            if(date_create($startTime)>date_create($todayTime) && date_create($endTime)>date_create($todayTime) && date_create($endTime)>=date_create($startTime)){
-                if($_REQUEST["drivingOption"]=="selfDriving"){
-                    if($_REQUEST["drivingLicense"]!=""){
-                        if(preg_match('/([a-zA-Z]{2}[0-9]{7}[a-zA-Z]{1}[0-9]{5})/', $_REQUEST["drivingLicense"])){
-                            echo "all ok. have a safe journey";
-                            insertRequest();
+
+            if($_REQUEST["destination"]!=""){
+                if($_REQUEST["drivingOption"]!=""){
+                    if($_REQUEST["staringDate"]!=""){
+                        if($_REQUEST["endingDate"]!=""){
+                            if(date_create($startTime)>date_create($todayTime) && date_create($endTime)>date_create($todayTime) && date_create($endTime)>=date_create($startTime)){
+                                if($_REQUEST["drivingOption"]=="selfDriving"){
+                                    if($_REQUEST["drivingLicense"]!=""){
+                                        if(preg_match('/([a-zA-Z]{2}\-[0-9]{7}\-[a-zA-Z]{1}\-[0-9]{5})/', $_REQUEST["drivingLicense"])){
+                                            echo "all ok. have a safe journey";
+                                            insertRequest();
+                                        }
+                                        else{
+                                            $msg="license error";
+                                            echo $msg;
+                                            $_SESSION["vehicleRegistrationError"]=$msg;
+                                        }
+                                    }
+                                    else{
+                                        $msg="driving license must needed.";
+                                        echo $msg;
+                                        $_SESSION["vehicleRegistrationError"]=$msg;
+                                    }
+                                }
+                                elseif($_REQUEST["drivingOption"]=="withDriver"){
+                                    echo "all ok with driver";
+                                    insertRequest();
+                                }
+                            }
+                            else {
+                                $msg="start or ending date error";
+                                echo $msg;
+                                $_SESSION["vehicleRegistrationError"]=$msg;
+                            }
                         }
-                        else{
-                            $msg="license error";
+                        else {
+                            $msg="ending date field empty";
                             echo $msg;
                             $_SESSION["vehicleRegistrationError"]=$msg;
                         }
                     }
-                    else{
-                        $msg="driving license must needed.";
+                    else {
+                        $msg="starting date field empty";
                         echo $msg;
                         $_SESSION["vehicleRegistrationError"]=$msg;
                     }
                 }
-                elseif($_REQUEST["drivingOption"]=="withDriver"){
-                    echo "all ok with driver";
-                    insertRequest();
+                else {
+                    $msg="driving option field empty";
+                    echo $msg;
+                    $_SESSION["vehicleRegistrationError"]=$msg;
                 }
             }
             else {
-                $msg="start or ending date error";
+                $msg="destination field empty";
                 echo $msg;
                 $_SESSION["vehicleRegistrationError"]=$msg;
             }
+            
+
             if(isset($_SESSION["vehicleRegistrationError"])){
                 header("Location: ../displayFiles/borrowRequest.php");
             }
