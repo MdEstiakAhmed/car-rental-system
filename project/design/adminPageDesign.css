@@ -1,0 +1,161 @@
+body {
+  margin: 0;
+}
+.header{
+  position: sticky;
+}
+ul {
+list-style-type: none;
+margin: 0;
+padding: 0;
+overflow: hidden;
+background-color: #333;
+}
+
+li {
+float: left;
+}
+
+li a {
+display: block;
+color: white;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+}
+
+li a:hover {
+background-color: #111;
+}
+
+.welcome{
+  color: black;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 60px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.dashboard{
+  height:400px;
+  margin-top: 60px;
+}
+.user{
+  overflow: hidden;
+  margin-top: 10px;
+  text-align:center;
+  padding-left: 270px;
+}
+.total-user{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-admin{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-customer{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-client{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+
+.borrow{
+  overflow: hidden;
+  margin-top: 10px;
+  text-align:center;
+  padding-left: 170px;
+}
+.total-borrow{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-borrow-complete{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-borrow-pending{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-borrow-accept{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-borrow-reject{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 200px;
+  float: left;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+
+.car{
+  overflow: hidden;
+  margin-top: 10px;
+  text-align:center;
+  padding-left: 365px;
+}
+.total-vehicle{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 210px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-vehicle-available{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 210px;
+  float: left;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.total-vehicle-unavailable{
+  border: 1px solid #e0e0e0b0;
+  height: 100px;
+  width: 210px;
+  float: left;
+  box-shadow: 0px 0px 5px #781fd27d;
+}
+.value{
+  font-size: 40px;
+}

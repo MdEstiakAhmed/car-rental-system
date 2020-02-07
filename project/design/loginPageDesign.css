@@ -1,0 +1,117 @@
+section{
+    border:1px solid #0000000d;
+    width:500px;
+    height:300px;
+    margin:130px auto;
+    box-shadow: 10px 10px 10px #1413156e;
+}
+section h1{
+    text-align:center;
+    margin:5px auto;
+    width:400px;
+    font-size:30px;
+}
+form{}
+.email{
+    margin:5px auto;
+    overflow:hidden;
+    text-align:center;
+    width:450px;
+    height:50px;
+}
+.email p{
+    width:75px;
+    float:left;
+    margin-top:18px;
+    margin-left:45px;
+    font-size:20px;
+    padding-left:5px;
+}
+.email input{
+    display:inline-block;
+    margin-top:16px;
+    margin-right:10px;
+    width:300px;
+    height:25px;
+    font-size:16px;
+}
+.password{
+    margin:5px auto;
+    overflow:hidden;
+    text-align:center;
+    width:450px;
+    height:50px;
+}
+.password p{
+    width:95px;
+    float:left;
+    margin-top:18px;
+    margin-left:30px;
+    font-size:20px;
+}
+.password input{
+    display:inline-block;
+    margin-top:16px;
+    margin-left:-10px;
+    width:300px;
+    height:25px;
+    font-size:16px;
+}
+.button{
+
+    height:30px;
+    width:300px;
+    margin:20px 45px 0 auto;
+}
+.button button{
+    width:60px;
+    height:28px;
+    cursor: pointer;
+    background-color:#ffffff00;
+    border:1px solid #00000070;
+}
+.button button:hover{
+	background-color:#cecbcbab;
+}
+.button button a{
+    text-decoration:none;
+    font-size:18px;
+    color:black;
+}
+.button input{
+    width:60px;
+    height:28px;
+    font-size:18px;
+    color:black;
+    background-color:#ffffff00;
+    border:1px solid #00000070;
+    cursor: pointer;
+}
+.button input:hover{
+	background-color:#cecbcbab;
+}
+.register{
+	position:fixed;
+	text-align:center;
+	font-size:20px;
+	margin-top:20px;
+	margin-left:110px;
+	height:40px;
+}
+.register a{
+    text-decoration:none;
+    color:#3300ffc2;
+    font-size:20px;
+    cursor: pointer;
+}
+.register a:hover{
+	color:#000000c7;
+}
+.error p{
+	width:250px;
+	margin-top:-3px;
+	margin-left:120px;
+	text-align:center;
+	position:fixed;
+	color:red;
+}

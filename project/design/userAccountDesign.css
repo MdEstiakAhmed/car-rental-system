@@ -1,0 +1,15 @@
+.button{
+    background-color: #909098fa;
+    height: 35px;
+    width: 73px;
+}
+.button a{
+    color: black;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+}
+.details{
+    font-size: 20px;
+}
+
