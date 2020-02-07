@@ -1,0 +1,17 @@
+CREATE TABLE `vehicle_rental_system`.`user_information` ( `id` INT(5) NOT NULL AUTO_INCREMENT , `email` VARCHAR(30) NOT NULL , `name` VARCHAR(30) NOT NULL , `type` VARCHAR(10) NOT NULL , `password` LONGTEXT NOT NULL , `phone_number` VARCHAR(11) NOT NULL , `birthdate` VARCHAR(20) NULL , `gender` VARCHAR(6) NOT NULL , `image_URL` VARCHAR(50) NULL , PRIMARY KEY (`id`), UNIQUE `phone_number` (`phone_number`)) ENGINE = InnoDB;
+
+INSERT INTO `user_information` (`id`, `email`, `name`, `type`, `password`, `phone_number`, `birthdate`, `gender`, `image_URL`) VALUES ('10000', 'admin@gmail.com', 'Admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', '01758975336', '08/Nov/1995', 'male', NULL);
+
+INSERT INTO `user_information` ( `email`, `name`, `type`, `password`, `phone_number`, `birthdate`, `gender`, `image_URL`) VALUES ('client@gmail.com', 'Client', 'client', '62608e08adc29a8d6dbc9754e659f125', '01758224336', '15/Nov/1995', 'male', NULL)
+
+CREATE TABLE `vehicle_rental_system`.`vehicle_information` ( `id` INT(5) NOT NULL AUTO_INCREMENT , `owner_email` VARCHAR(30) NOT NULL , `vehicle_type` VARCHAR(15) NOT NULL , `company` VARCHAR(15) NOT NULL , `license_number` VARCHAR(50) NOT NULL , `license_expiry_date` VARCHAR(20) NOT NULL , `seat_number` VARCHAR(2) NOT NULL , `color` VARCHAR(10) NOT NULL , `hoursepower` VARCHAR(20) NOT NULL , `image_URL` VARCHAR(50) NOT NULL , `status` VARCHAR(15) NOT NULL , PRIMARY KEY (`id`), UNIQUE (`license_number`)) ENGINE = InnoDB;
+
+INSERT INTO `vehicle_information` (`id`, `owner_email`, `vehicle_type`, `company`, `license_number`, `license_expiry_date`, `seat_number`, `color`, `hoursepower`, `image_URL`, `status`) VALUES ('20000', 'admin@gmail.com', 'standard', 'toyota', 'dhaka metro gha 45-7894', '2-Mar-2025', '5', 'black', '1501 to 2000', 'uploadImage/uploadImageOfVehicle/', 'available')
+
+CREATE TABLE `vehicle_rental_system`.`borrow_information` ( `borrow_id` INT(5) NOT NULL AUTO_INCREMENT , `user_id` VARCHAR(5) NOT NULL , `destination` VARCHAR(20) NOT NULL , `driving_option` VARCHAR(20) NOT NULL , `user_license_number` VARCHAR(15) NULL , `travel_start_date` VARCHAR(30) NOT NULL , `travel_end_date` VARCHAR(30) NOT NULL , `borrow_status` VARCHAR(15) NOT NULL , PRIMARY KEY (`borrow_id`)) ENGINE = InnoDB;
+
+CREATE TABLE `vehicle_rental_system`.`borrow_cost_details` ( `borrow_id` VARCHAR NOT NULL , `category_cost` VARCHAR NOT NULL , `destination_cost` VARCHAR NOT NULL , `driving_cost` VARCHAR NOT NULL , `duration_cost` VARCHAR NOT NULL , `total_cost` VARCHAR NOT NULL ) ENGINE = InnoDB;
+
+INSERT INTO `borrow_information` (`vehicle_id`, `user_id`, `vehicle_category`, `destination`, `driving_option`, `user_license_number`, `travel_start_date`, `travel_end_date`, ``total_cost, `borrow_status`) VALUES ('20002', '10002', 'suv', 'insideDhaka', 'selfDriving', 'AA4587985Q45872', '22-Nov-2019', '24-Nov-2019', '4000', 'pending')
+
+INSERT INTO `borrow_cost_details` (`borrow_id`, `category_cost`, `destination_cost`, `driving_cost`, `duration_cost`, `total_cost`) VALUES ('', '', '', '', '', '')
